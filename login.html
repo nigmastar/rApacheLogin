@@ -1,0 +1,44 @@
+<% 
+library(svSocket)
+con <- socketConnection(host = "localhost", port = 8888, blocking = FALSE)
+
+if(any(res<-COOKIES[["session_id"]]==evalServer(con, users$session_id))){
+	username <- eval(parse(text=paste0("evalServer(con, users$username[",
+                                     deparse(dput(res)),
+                                     "])")))
+	setStatus(302L)
+	setHeader("Location", "index.html")
+} else {
+%>
+<html>
+	<head>
+		<title>login</title>
+		<style type="text/css">
+			fieldset{
+				width:30%;
+				margin:10% auto;
+			}
+			input{
+				display: inline-block;
+				width:100%;
+			}
+			#lgn{
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<form method="POST"  action="checklogin.html" >
+			<fieldset>
+				<legend>Log In</legend>
+				<p><label for="usrnm">Username: </label>
+				<input type="text" name="username" id="usrnm"/></p>
+				<p><label for="pswrd">Password: </label>
+				<input type="password" name="password" id="pswrd" /></p>
+				<input type="submit" value="Login" id="lgn" />
+				<% if(isTRUE(COOKIES[["loginerror"]]=="true")) cat('Incorrect Username/Password combination.') %>
+			</fieldset>
+		</form>
+	</body>
+</html>
+<% } %>
