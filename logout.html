@@ -1,0 +1,14 @@
+<%
+
+	library(svSocket)
+	con <- socketConnection(host = "localhost", port = 8888, blocking = FALSE)
+
+	session_id <- COOKIES[["session_id"]]
+	setCookie('session_id')
+	expr <- paste0('evalServer(con, "users$session_id[users$session_id==\'',
+					session_id, '\']<-\'', 0, '\'")')
+	eval(parse(text=expr))
+	setStatus(302L)
+	setHeader("Location", "login.html")
+
+%>
