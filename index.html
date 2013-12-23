@@ -1,0 +1,31 @@
+<% 
+
+library(svSocket)
+con <- socketConnection(host = "localhost", port = 8888, blocking = FALSE)
+
+if(any(res<-COOKIES[["session_id"]]==evalServer(con, users$session_id))){
+	username <- eval(parse(text=paste0("evalServer(con, users$username[c(",
+					paste0(res,collapse=","),")])")))
+
+%>
+<html>
+	<head>
+		<title>home</title>
+	</head>
+	<body>
+		<h1>Hello <%= SERVER$remote_ip %>!</h1>
+		<h3>You are logged as <%= username %></h3>
+		<h3>It's <%= as.character(Sys.time()) %></h3>
+		<form action="logout.html">
+			<button>logout</button>
+		</form>
+	</body>
+
+</html>
+
+<%
+} else {
+	setStatus(302L)
+	setHeader("Location", "login.html")
+}
+%>
