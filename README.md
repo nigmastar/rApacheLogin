@@ -79,8 +79,8 @@ require(svSocket)
 con <- socketConnection(host = "localhost", port = 8888, blocking = FALSE)
 ```
 
-on top of the scripts. If your apache web server and the r socket server are in different
-server just specify the ip via the host parameter.
+on top of the scripts. If your apache web server and the r socket server are 'physically'
+in different servers just specify the ip of your r socket server via the host parameter.
 
 
 
