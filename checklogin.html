@@ -1,0 +1,43 @@
+<%
+
+randString <- function(n=20L, exclude=ls(.GlobalEnv)){
+  start <- TRUE
+  print(exclude)
+  res <- character()
+  while(start || any(res==exclude)){
+    start <- FALSE
+    res <- paste(sample(c(letters, LETTERS, 0L:9L), n, T),
+                 collapse="")
+  }
+  return(res)
+}
+
+library(svSocket)
+con <- socketConnection(host = "localhost", port = 8888, blocking = FALSE)
+
+inputuser <- POST[['username']]
+inputpass <- POST[['password']]
+
+res <- evalServer(con, users$username)==inputuser &	
+		evalServer(con, users$password)==inputpass
+
+if(any(res)){
+	session_id <- randString()
+	setCookie('session_id', session_id)
+	expr <- paste0('evalServer(con, "users$session_id[',
+					which(res), ']<-\'', session_id, '\'")')
+	eval(parse(text=expr))
+	setCookie('loginerror')
+	setStatus(302L)
+	setHeader("Location", "index.html")
+} else {
+	setCookie('loginerror', "true")
+	setStatus(302L)
+	setHeader("Location", "login.html")
+}
+
+%>
+
+
+
+
