@@ -29,10 +29,10 @@ REvalOnStartup "library(brew)"
 
 <Directory /var/www/rApacheLogin>
 	DirectoryIndex index.html
-        <Files "\.(html|rhtml|r)">
+        <FilesMatch "\.(html|rhtml|r)">
         	SetHandler r-script
         	RHandler brew::brew
-        </Files>
+        </FilesMatch>
 </Directory>
 ```
 
